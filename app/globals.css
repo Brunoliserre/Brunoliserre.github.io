@@ -2,50 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #09090f;
-}
-
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--background);
-  color: #f1f5f9;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* ── Scrollbar — light ───────────────────────────────── */
 ::-webkit-scrollbar {
   width: 5px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #09090f;
+  background: #f1f5f9;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #cbd5e1;
   border-radius: 99px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ── Scrollbar — dark ────────────────────────────────── */
+.dark ::-webkit-scrollbar-track {
+  background: #09090f;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
 
-/* Selection */
+/* ── Selection ───────────────────────────────────────── */
 ::selection {
   background: rgba(34, 211, 238, 0.15);
   color: #e2e8f0;
 }
 
-/* Make monochrome devicons visible on dark backgrounds */
+/* ── Monochrome devicons — light mode default ────────── */
 .devicon-nextjs-plain,
 .devicon-nextjs-original,
 .devicon-fastify-plain,
 .devicon-prisma-original,
 .devicon-prisma-plain {
+  color: #334155 !important;
+}
+
+/* ── Monochrome devicons — dark mode override ────────── */
+.dark .devicon-nextjs-plain,
+.dark .devicon-nextjs-original,
+.dark .devicon-fastify-plain,
+.dark .devicon-prisma-original,
+.dark .devicon-prisma-plain {
   color: #cbd5e1 !important;
 }

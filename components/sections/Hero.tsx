@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail, Download, ArrowDown } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const container = {
   hidden: { opacity: 0 },
@@ -21,21 +23,26 @@ const item = {
 };
 
 export default function Hero() {
+  const { t } = useLanguage();
+  const { theme } = useTheme();
+  const isLight = theme === "light";
+
   return (
     <section
       id="hero"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* Base background */}
-      <div className="absolute inset-0 bg-[#09090f]" />
+      <div className="absolute inset-0 bg-slate-50 dark:bg-[#09090f]" />
 
       {/* Grid pattern */}
       <div
-        className="absolute inset-0 opacity-100"
+        className="absolute inset-0"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(148,163,184,0.04) 1px, transparent 1px), linear-gradient(to right, rgba(148,163,184,0.04) 1px, transparent 1px)",
+            "linear-gradient(rgba(148,163,184,0.06) 1px, transparent 1px), linear-gradient(to right, rgba(148,163,184,0.06) 1px, transparent 1px)",
           backgroundSize: "52px 52px",
+          opacity: isLight ? 1 : 1,
         }}
       />
 
@@ -65,24 +72,24 @@ export default function Hero() {
         >
           {/* Status badge */}
           <motion.div variants={item} className="mb-8">
-            <span className="inline-flex items-center gap-2 text-xs font-mono text-cyan-400 bg-cyan-400/10 border border-cyan-400/20 rounded-full px-4 py-2 tracking-wide">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              Available for opportunities
+            <span className="inline-flex items-center gap-2 text-xs font-mono text-cyan-500 dark:text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-4 py-2 tracking-wide">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse" />
+              {t("hero_available")}
             </span>
           </motion.div>
 
           {/* Greeting */}
           <motion.p
             variants={item}
-            className="font-mono text-slate-500 text-base mb-2 tracking-wider"
+            className="font-mono text-slate-400 dark:text-slate-500 text-base mb-2 tracking-wider"
           >
-            Hey, I&apos;m
+            {t("hero_greeting")}
           </motion.p>
 
           {/* Name */}
           <motion.h1
             variants={item}
-            className="text-[5.5rem] sm:text-[7rem] lg:text-[9rem] font-black leading-[0.9] mb-6 bg-gradient-to-br from-white via-cyan-200 to-violet-400 bg-clip-text text-transparent"
+            className="text-[5.5rem] sm:text-[7rem] lg:text-[9rem] font-black leading-[0.9] mb-6 bg-gradient-to-br from-slate-900 via-cyan-600 to-violet-500 dark:from-white dark:via-cyan-200 dark:to-violet-400 bg-clip-text text-transparent"
           >
             Bruno.
           </motion.h1>
@@ -90,7 +97,7 @@ export default function Hero() {
           {/* Title */}
           <motion.h2
             variants={item}
-            className="text-xl sm:text-2xl lg:text-3xl font-semibold text-slate-300 mb-5 tracking-tight"
+            className="text-xl sm:text-2xl lg:text-3xl font-semibold text-slate-600 dark:text-slate-300 mb-5 tracking-tight"
           >
             Full Stack Developer
           </motion.h2>
@@ -98,11 +105,11 @@ export default function Hero() {
           {/* Tagline */}
           <motion.p
             variants={item}
-            className="text-slate-500 text-base sm:text-lg max-w-md mx-auto mb-12 leading-relaxed"
+            className="text-slate-500 dark:text-slate-500 text-base sm:text-lg max-w-md mx-auto mb-12 leading-relaxed"
           >
-            Building modern web experiences from Argentina.
+            {t("hero_tagline1")}
             <br className="hidden sm:block" />
-            Clean code, scalable systems, shipped products.
+            {t("hero_tagline2")}
           </motion.p>
 
           {/* Buttons */}
@@ -136,7 +143,7 @@ export default function Hero() {
                 {...(external
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
-                className="group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800/80 text-slate-400 hover:text-white border border-slate-800/80 hover:border-slate-700 transition-all duration-200 text-sm font-medium"
+                className="group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200/80 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 text-sm font-medium shadow-sm dark:shadow-none"
               >
                 <Icon
                   size={15}
@@ -155,7 +162,7 @@ export default function Hero() {
                 size={15}
                 className="group-hover:scale-110 transition-transform duration-200"
               />
-              Download CV
+              {t("hero_download_cv")}
             </a>
           </motion.div>
         </motion.div>
@@ -168,14 +175,14 @@ export default function Hero() {
         transition={{ delay: 2.2 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="font-mono text-slate-600 text-[10px] tracking-[0.2em] uppercase">
-          scroll
+        <span className="font-mono text-slate-400 dark:text-slate-600 text-[10px] tracking-[0.2em] uppercase">
+          {t("hero_scroll")}
         </span>
         <motion.div
           animate={{ y: [0, 5, 0] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         >
-          <ArrowDown size={14} className="text-slate-600" />
+          <ArrowDown size={14} className="text-slate-400 dark:text-slate-600" />
         </motion.div>
       </motion.div>
     </section>

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import type { Project } from "@/data/projects";
 import { techStyles, fallbackTechStyle } from "@/data/projects";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Props {
   project: Project | null;
@@ -35,6 +36,7 @@ const slideVariants = {
 export default function ProjectModal({ project, onClose }: Props) {
   const [currentImage, setCurrentImage] = useState(0);
   const [direction, setDirection] = useState(1);
+  const { lang, t } = useLanguage();
 
   const images = project?.images ?? [];
   const hasImages = images.length > 0;
@@ -49,13 +51,11 @@ export default function ProjectModal({ project, onClose }: Props) {
     setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
   }, [images.length]);
 
-  // Reset on project change
   useEffect(() => {
     setCurrentImage(0);
     setDirection(1);
   }, [project?.title]);
 
-  // ESC + arrow keys + scroll lock
   useEffect(() => {
     if (!project) return;
 
@@ -76,6 +76,8 @@ export default function ProjectModal({ project, onClose }: Props) {
 
   const isInternal =
     !project?.liveUrl && (!project?.repoUrl || project.repoUrl === "#");
+
+  const features = project?.features?.[lang] ?? [];
 
   return (
     <AnimatePresence>
@@ -103,20 +105,20 @@ export default function ProjectModal({ project, onClose }: Props) {
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl bg-[#0f1522] border border-slate-800/80 shadow-2xl shadow-black/60 pointer-events-auto"
+              className="relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl bg-white dark:bg-[#0f1522] border border-slate-200/80 dark:border-slate-800/80 shadow-2xl shadow-black/20 dark:shadow-black/60 pointer-events-auto"
             >
               {/* Close button */}
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 z-20 p-1.5 rounded-lg bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700 transition-all"
+                className="absolute top-4 right-4 z-20 p-1.5 rounded-lg bg-slate-100/80 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
                 aria-label="Close modal"
               >
                 <X size={15} />
               </button>
 
-              {/* ── Image gallery ───────────────────────────────────── */}
+              {/* Image gallery */}
               {hasImages && (
-                <div className="relative w-full aspect-video overflow-hidden rounded-t-2xl bg-slate-950">
+                <div className="relative w-full aspect-video overflow-hidden rounded-t-2xl bg-slate-100 dark:bg-slate-950">
                   <AnimatePresence custom={direction} mode="popLayout">
                     <motion.div
                       key={currentImage}
@@ -130,7 +132,7 @@ export default function ProjectModal({ project, onClose }: Props) {
                     >
                       <Image
                         src={images[currentImage]}
-                        alt={`${project.title} screenshot ${currentImage + 1}`}
+                        alt={`${project.title} ${t("modal_internal")} ${currentImage + 1}`}
                         fill
                         className="object-cover"
                         sizes="(max-width: 672px) 100vw, 672px"
@@ -138,10 +140,8 @@ export default function ProjectModal({ project, onClose }: Props) {
                     </motion.div>
                   </AnimatePresence>
 
-                  {/* Bottom gradient so text stays readable */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0f1522]/50 via-transparent to-transparent pointer-events-none" />
 
-                  {/* Navigation arrows (only if multiple images) */}
                   {images.length > 1 && (
                     <>
                       <button
@@ -159,7 +159,6 @@ export default function ProjectModal({ project, onClose }: Props) {
                         <ChevronRight size={16} />
                       </button>
 
-                      {/* Dot / pill indicators */}
                       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5">
                         {images.map((_, i) => (
                           <button
@@ -178,7 +177,6 @@ export default function ProjectModal({ project, onClose }: Props) {
                         ))}
                       </div>
 
-                      {/* Counter */}
                       <span className="absolute top-3 left-3 text-[10px] font-mono text-white/60 bg-black/40 backdrop-blur-sm rounded-md px-2 py-0.5">
                         {currentImage + 1} / {images.length}
                       </span>
@@ -187,30 +185,29 @@ export default function ProjectModal({ project, onClose }: Props) {
                 </div>
               )}
 
-              {/* ── Body ─────────────────────────────────────────────── */}
+              {/* Body */}
               <div className="p-6 sm:p-7">
-                {/* Title + description */}
-                <h3 className="text-lg font-bold text-slate-100 mb-1.5 pr-8">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1.5 pr-8">
                   {project.title}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-7">
-                  {project.description}
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-7">
+                  {project.description[lang]}
                 </p>
 
                 <div className="grid sm:grid-cols-[1fr_180px] gap-8">
                   {/* Features */}
-                  {project.features && project.features.length > 0 && (
+                  {features.length > 0 && (
                     <div>
-                      <p className="text-[10px] font-mono text-slate-600 uppercase tracking-[0.18em] mb-4">
-                        Features
+                      <p className="text-[10px] font-mono text-slate-400 dark:text-slate-600 uppercase tracking-[0.18em] mb-4">
+                        {t("modal_features")}
                       </p>
                       <ul className="space-y-2.5">
-                        {project.features.map((f) => (
+                        {features.map((f) => (
                           <li key={f} className="flex items-start gap-2.5">
                             <span className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center">
-                              <Check size={9} className="text-cyan-400" />
+                              <Check size={9} className="text-cyan-500 dark:text-cyan-400" />
                             </span>
-                            <span className="text-slate-300 text-sm leading-snug">
+                            <span className="text-slate-700 dark:text-slate-300 text-sm leading-snug">
                               {f}
                             </span>
                           </li>
@@ -222,26 +219,26 @@ export default function ProjectModal({ project, onClose }: Props) {
                   {/* Stack + links */}
                   <div className="space-y-6">
                     <div>
-                      <p className="text-[10px] font-mono text-slate-600 uppercase tracking-[0.18em] mb-3">
-                        Stack
+                      <p className="text-[10px] font-mono text-slate-400 dark:text-slate-600 uppercase tracking-[0.18em] mb-3">
+                        {t("modal_stack")}
                       </p>
                       <div className="flex flex-wrap gap-1.5">
-                        {project.tech.map((t) => (
+                        {project.tech.map((tech) => (
                           <span
-                            key={t}
+                            key={tech}
                             className={`px-2.5 py-0.5 text-[11px] font-medium rounded-full border ${
-                              techStyles[t] ?? fallbackTechStyle
+                              techStyles[tech] ?? fallbackTechStyle
                             }`}
                           >
-                            {t}
+                            {tech}
                           </span>
                         ))}
                       </div>
                     </div>
 
                     <div>
-                      <p className="text-[10px] font-mono text-slate-600 uppercase tracking-[0.18em] mb-3">
-                        Links
+                      <p className="text-[10px] font-mono text-slate-400 dark:text-slate-600 uppercase tracking-[0.18em] mb-3">
+                        {t("modal_links")}
                       </p>
                       <div className="flex flex-col gap-2.5">
                         {project.repoUrl && project.repoUrl !== "#" && (
@@ -249,10 +246,10 @@ export default function ProjectModal({ project, onClose }: Props) {
                             href={project.repoUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-cyan-400 transition-colors"
+                            className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"
                           >
                             <Github size={14} />
-                            Repository
+                            {t("modal_repo")}
                           </a>
                         )}
                         {project.liveUrl && (
@@ -260,16 +257,16 @@ export default function ProjectModal({ project, onClose }: Props) {
                             href={project.liveUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-cyan-400 transition-colors"
+                            className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"
                           >
                             <ExternalLink size={14} />
-                            Live demo
+                            {t("modal_live")}
                           </a>
                         )}
                         {isInternal && (
-                          <span className="flex items-center gap-2 text-xs text-slate-600">
+                          <span className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-600">
                             <Lock size={12} />
-                            Internal project
+                            {t("modal_internal")}
                           </span>
                         )}
                       </div>
