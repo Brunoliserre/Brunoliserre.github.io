@@ -1,18 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const socials = [
   {
-    href: "https://github.com",
+    href: "https://github.com/Brunoliserre",
     icon: Github,
     label: "GitHub",
     external: true,
   },
   {
-    href: "https://linkedin.com",
+    href: "https://www.linkedin.com/in/bruno-liserre/",
     icon: Linkedin,
     label: "LinkedIn",
     external: true,
@@ -50,6 +50,19 @@ export default function Footer() {
           <p className="text-slate-500 text-base max-w-sm mx-auto mb-10 leading-relaxed">
             {t("footer_sub")}
           </p>
+
+          {/* Primary email CTA */}
+          <a
+            href="mailto:brunoliserre@gmail.com?subject=Hola%20Bruno"
+            className="group inline-flex items-center gap-2.5 px-7 py-3.5 mb-12 rounded-2xl bg-gradient-to-r from-cyan-500 to-violet-600 hover:from-cyan-400 hover:to-violet-500 text-white font-semibold transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 hover:scale-[1.03]"
+          >
+            <Mail size={18} />
+            {t("footer_cta")}
+            <ArrowRight
+              size={16}
+              className="group-hover:translate-x-1 transition-transform duration-200"
+            />
+          </a>
 
           {/* Social icons */}
           <div className="flex items-center justify-center gap-3 mb-14">

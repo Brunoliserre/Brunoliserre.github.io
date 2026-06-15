@@ -23,9 +23,13 @@ const item = {
 };
 
 export default function Hero() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { theme } = useTheme();
   const isLight = theme === "light";
+  const cvUrl =
+    lang === "es"
+      ? "/Bruno_Liserre_CV_ES.pdf"
+      : "/Bruno_Liserre_CV_EN.pdf";
 
   return (
     <section
@@ -119,13 +123,13 @@ export default function Hero() {
           >
             {[
               {
-                href: "https://github.com",
+                href: "https://github.com/Brunoliserre",
                 icon: Github,
                 label: "GitHub",
                 external: true,
               },
               {
-                href: "https://linkedin.com",
+                href: "https://www.linkedin.com/in/bruno-liserre/",
                 icon: Linkedin,
                 label: "LinkedIn",
                 external: true,
@@ -154,7 +158,7 @@ export default function Hero() {
             ))}
 
             <a
-              href="/cv.pdf"
+              href={cvUrl}
               download
               className="group flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-600 hover:from-cyan-400 hover:to-violet-500 text-white font-medium transition-all duration-200 text-sm shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 hover:scale-[1.03]"
             >

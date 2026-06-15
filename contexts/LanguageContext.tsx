@@ -52,6 +52,7 @@ const translations: Record<Lang, Record<string, string>> = {
     footer_label: "04. Contacto",
     footer_heading: "Trabajemos juntos",
     footer_sub: "¿Tenés un proyecto en mente o querés charlar? Siempre estoy abierto a conversaciones interesantes y nuevas oportunidades.",
+    footer_cta: "Escribime un email",
     footer_built: "Construido con Next.js, TypeScript & Tailwind CSS",
     footer_rights: "© 2026 Bruno Liserre",
   },
@@ -102,6 +103,7 @@ const translations: Record<Lang, Record<string, string>> = {
     footer_label: "04. Contact",
     footer_heading: "Let's work together",
     footer_sub: "Have a project in mind or want to chat? I'm always open to interesting conversations and new opportunities.",
+    footer_cta: "Send me an email",
     footer_built: "Built with Next.js, TypeScript & Tailwind CSS",
     footer_rights: "© 2026 Bruno Liserre",
   },
@@ -124,7 +126,10 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem("lang") as Lang | null;
-    if (saved === "es" || saved === "en") setLangState(saved);
+    if (saved === "es" || saved === "en") {
+      setLangState(saved);
+      document.documentElement.setAttribute("lang", saved);
+    }
   }, []);
 
   const setLang = (l: Lang) => {
